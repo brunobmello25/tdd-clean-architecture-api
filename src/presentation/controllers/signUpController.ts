@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '../helpers/httpHelper';
+import { badRequest, serverError } from '../helpers';
 import {
   Controller,
   EmailValidator,
