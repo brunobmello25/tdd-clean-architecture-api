@@ -14,7 +14,7 @@ export class SignUpController implements Controller {
     private createUser: CreateUser
   ) {}
 
-  handle(httpRequest: HttpRequest): HttpResponse {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = [
         'name',
@@ -35,11 +35,11 @@ export class SignUpController implements Controller {
         return badRequest(new InvalidParamError('passwordConfirmation'));
       }
 
-      const isValid = this.emailValidator.isValid(email);
+      const isValid = await this.emailValidator.isValid(email);
 
       if (!isValid) return badRequest(new InvalidParamError('email'));
 
-      const user = this.createUser.create({ name, email, password });
+      const user = await this.createUser.create({ name, email, password });
 
       return success(user);
     } catch (error) {

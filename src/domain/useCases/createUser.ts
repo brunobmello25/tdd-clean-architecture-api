@@ -7,5 +7,5 @@ export interface CreateUserDTO {
 }
 
 export interface CreateUser {
-  create(account: CreateUserDTO): User;
+  create(account: CreateUserDTO): Promise<User>;
 }
