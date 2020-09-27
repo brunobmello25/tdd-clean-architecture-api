@@ -1,10 +1,13 @@
 import { SignUpController } from './signUpController';
 import { MissingParamError, InvalidParamError, ServerError } from '../errors';
 import { EmailValidator } from '../protocols';
+import { CreateUser, CreateUserDTO } from '../../domain/useCases/createAccount';
+import { User } from '../../domain/models';
 
 interface SutTypes {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
+  createUserStub: CreateUser;
 }
 
 function createEmailValidatorStub() {
@@ -17,13 +20,31 @@ function createEmailValidatorStub() {
   return new EmailValidatorStub();
 }
 
+function createCreateUserStub(): CreateUser {
+  class CreateUserStub implements CreateUser {
+    create(_: CreateUserDTO): User {
+      const fakeUser: User = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@email.com',
+        password: 'valid_password',
+      };
+      return fakeUser;
+    }
+  }
+
+  return new CreateUserStub();
+}
+
 function createSut(): SutTypes {
   const emailValidatorStub = createEmailValidatorStub();
-  const sut = new SignUpController(emailValidatorStub);
+  const createUserStub = createCreateUserStub();
+  const sut = new SignUpController(emailValidatorStub, createUserStub);
 
   return {
     emailValidatorStub,
     sut,
+    createUserStub,
   };
 }
 
@@ -167,5 +188,27 @@ describe('SignUpController', () => {
 
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  test('should call CreateAccount with correct values', () => {
+    const { sut, createUserStub } = createSut();
+    const createUser = jest.spyOn(createUserStub, 'create');
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    };
+
+    sut.handle(httpRequest);
+
+    expect(createUser).toHaveBeenCalledWith({
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password,
+    });
   });
 });
