@@ -3,7 +3,7 @@ import { badRequest, serverError } from '../helpers/httpHelper';
 import { Controller } from '../protocols/controller';
 import { InvalidParamError, MissingParamError } from '../errors';
 
-export default class SignUpController implements Controller {
+export class SignUpController implements Controller {
   constructor(private emailValidator: EmailValidator) {}
 
   handle(httpRequest: HttpRequest): HttpResponse {

@@ -1,4 +1,4 @@
-import SignUpController from './signUpController';
+import { SignUpController } from './signUpController';
 import { MissingParamError, InvalidParamError, ServerError } from '../errors';
 import { EmailValidator } from '../protocols/emailValidator';
 
