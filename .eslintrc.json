@@ -34,7 +34,8 @@
     "import/prefer-default-export": "off",
     "no-useless-constructor": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "max-classes-per-file": "off"
   },
   "settings": {
     "import/resolver": {
