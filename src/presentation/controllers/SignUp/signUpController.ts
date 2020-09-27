@@ -1,12 +1,12 @@
-import { badRequest, serverError } from '../helpers';
+import { badRequest, serverError } from '../../helpers';
 import {
-  Controller,
-  EmailValidator,
   HttpRequest,
   HttpResponse,
-} from '../protocols';
-import { InvalidParamError, MissingParamError } from '../errors';
-import { CreateUser } from '../../domain/useCases/createAccount';
+  Controller,
+  EmailValidator,
+  CreateUser,
+} from './SignUpProtocols';
+import { InvalidParamError, MissingParamError } from '../../errors';
 
 export class SignUpController implements Controller {
   constructor(
@@ -39,7 +39,7 @@ export class SignUpController implements Controller {
 
       if (!isValid) return badRequest(new InvalidParamError('email'));
 
-      const user = this.createUser.create({ name, email, password });
+      this.createUser.create({ name, email, password });
     } catch (error) {
       return serverError();
     }
